@@ -153,6 +153,13 @@ module OmniAuth
 
         end_session_uri = URI(client_options.end_session_endpoint)
         end_session_uri.query = encoded_post_logout_redirect_uri
+
+        if params["id_token"].present?
+          query_params = URI.decode_www_form(end_session_uri.query || '')
+          query_params << ["id_token_hint", params["id_token"]]
+          end_session_uri.query = URI.encode_www_form(query_params)
+        end
+
         end_session_uri.to_s
       end
 
